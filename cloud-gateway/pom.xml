@@ -11,7 +11,7 @@
     </parent>
     <artifactId>cloud-gateway</artifactId>
     <packaging>jar</packaging>
-    <description>Spring Cloud 2021 and Spring Cloud Alibaba for build Gateway</description>
+    <description>Spring Cloud 2021 and Spring Cloud Alibaba for build Gateway Module</description>
 
     <dependencies>
         <dependency>
@@ -22,9 +22,28 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
+
+        <!-- 以下可选依赖 -->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alibaba.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alibaba.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alibaba.cloud</groupId>-->
+        <!--            <artifactId>spring-cloud-alibaba-sentinel-gateway</artifactId>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alibaba.csp</groupId>-->
+        <!--            <artifactId>sentinel-datasource-nacos</artifactId>-->
+        <!--        </dependency>-->
     </dependencies>
 
     <build>
+        <finalName>${project.artifactId}-${parent.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

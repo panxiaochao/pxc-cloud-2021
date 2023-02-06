@@ -11,3 +11,16 @@ spring:
   ## 应用名称
   application:
     name: cloud-gateway
+  main:
+    ## 允许循环引用
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+    web-application-type: reactive
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+      cache:
+        enabled: true
+        caffeine:
+          spec: initialCapacity=500,expireAfterWrite=5s

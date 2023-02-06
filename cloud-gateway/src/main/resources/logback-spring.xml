@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <property name="filePath" value="./logs/cloud-gateway"/>
+    <property name="consolePattern"
+              value="%d{YYYY-MM-dd HH:mm:ss.SSS} %cyan(%-5level) %magenta(${PID:- }) [%thread] %X{tl} %cyan(%logger{50}) - %msg%n"/>
+    <property name="patternLayout" value="%d{YYYY-MM-dd HH:mm:ss.SSS} %-5level [%thread] %X{tl} %logger{50} - %msg%n"/>
+
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <Pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} %cyan(%-5level) %magenta(${PID:- }) [%thread] %X{tl} %cyan(%logger{50}) - %msg%n
-            </Pattern>
+            <Pattern>${consolePattern}</Pattern>
             <charset>UTF-8</charset>
         </encoder>
     </appender>
