@@ -10,6 +10,12 @@
     <property name="consolePattern"
               value="%d{YYYY-MM-dd HH:mm:ss.SSS} %cyan(%-5level) %magenta(${PID:- }) [%thread] %X{tl} %cyan(%logger{50}) - %msg%n"/>
     <property name="patternLayout" value="%d{YYYY-MM-dd HH:mm:ss.SSS} %-5level [%thread] %X{tl} %logger{50} - %msg%n"/>
+    <!-- 日志最大的历史 30天 -->
+    <property name="maxHistory" value="30"/>
+    <!--单个日志文件最大10M，到了这个值，就会再创建一个日志文件，日志文件的名字最后+1-->
+    <property name="maxFileSize" value="10MB"/>
+    <!--所有的日志文件最大10G，超过就会删除旧的日志-->
+    <property name="totalSizeCap" value="10GB"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -27,14 +33,10 @@
         </encoder>
         <!-- 循环政策：基于文件大小和时间创建日志文件 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <!-- 日志文件名格式 -->
             <fileNamePattern>${filePath}/info/%d{yyyy-MM-dd}/info-%i.log</fileNamePattern>
-            <!-- 日志最大的历史 30天 -->
-            <maxHistory>30</maxHistory>
-            <!--单个日志文件最大10M，到了这个值，就会再创建一个日志文件，日志文件的名字最后+1-->
-            <maxFileSize>10MB</maxFileSize>
-            <!--所有的日志文件最大20G，超过就会删除旧的日志-->
-            <totalSizeCap>10GB</totalSizeCap>
+            <maxHistory>${maxHistory}</maxHistory>
+            <maxFileSize>${maxHistory}</maxFileSize>
+            <totalSizeCap>${totalSizeCap}</totalSizeCap>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <!-- 过滤的级别 -->
@@ -55,14 +57,10 @@
         </encoder>
         <!-- 循环政策：基于文件大小和时间创建日志文件 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <!-- 日志文件名格式 -->
             <fileNamePattern>${filePath}/error/%d{yyyy-MM-dd}/error-%i.log</fileNamePattern>
-            <!-- 日志最大的历史 30天 -->
-            <maxHistory>30</maxHistory>
-            <!--单个日志文件最大10M，到了这个值，就会再创建一个日志文件，日志文件的名字最后+1-->
-            <maxFileSize>10MB</maxFileSize>
-            <!--所有的日志文件最大20G，超过就会删除旧的日志-->
-            <totalSizeCap>10GB</totalSizeCap>
+            <maxHistory>${maxHistory}</maxHistory>
+            <maxFileSize>${maxHistory}</maxFileSize>
+            <totalSizeCap>${totalSizeCap}</totalSizeCap>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <!-- 过滤的级别 -->
@@ -75,7 +73,7 @@
     </appender>
 
     <!-- Spring日志级别控制  -->
-    <logger name="org.springframework" level="warn" />
+    <logger name="org.springframework" level="warn"/>
 
     <!-- 控制台日志 -->
     <root level="INFO">
@@ -84,7 +82,7 @@
 
     <!-- 系统操作日志 -->
     <root level="INFO">
-        <appender-ref ref="FILE_INFO" />
-        <appender-ref ref="FILE_ERROR" />
+        <appender-ref ref="FILE_INFO"/>
+        <appender-ref ref="FILE_ERROR"/>
     </root>
 </configuration>
