@@ -43,7 +43,6 @@ public class CorsFilter implements WebFilter {
         LOGGER.info(">>> CorsFilter");
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
-        String path = exchange.getRequest().getURI().getPath();
         if (CorsUtils.isCorsRequest(request)) {
             HttpHeaders headers = response.getHeaders();
             headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");

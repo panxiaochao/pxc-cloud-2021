@@ -23,6 +23,19 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
 
+        <!-- MAC M1 DNS resolver -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver-dns-native-macos</artifactId>
+            <scope>runtime</scope>
+            <classifier>osx-aarch_64</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.panxiaochao</groupId>
+            <artifactId>pxc-framework-trace-log</artifactId>
+        </dependency>
+
         <!-- 以下可选依赖 -->
         <!--        <dependency>-->
         <!--            <groupId>com.alibaba.cloud</groupId>-->

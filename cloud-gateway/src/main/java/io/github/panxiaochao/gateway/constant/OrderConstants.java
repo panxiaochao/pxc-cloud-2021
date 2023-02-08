@@ -9,11 +9,11 @@ package io.github.panxiaochao.gateway.constant;
  */
 public interface OrderConstants {
 
-    Integer ORDER_REQUEST_WRAPPER = -10;
+    Integer ORDER_REQUEST_WRAPPER = 10;
 
-    Integer ORDER_XSS = -100;
+    Integer ORDER_REQUEST = 20;
 
-    Integer ORDER_AUTH = -200;
+    Integer ORDER_AUTH = 30;
 
-    Integer ORDER_REQUEST = -1000;
+    Integer ORDER_XSS = 40;
 }
