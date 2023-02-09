@@ -1,6 +1,6 @@
-package io.github.panxiaochao.gateway.filter;
+package io.github.panxiaochao.gateway.globalfilter;
 
-import io.github.panxiaochao.gateway.constant.OrderConstants;
+import io.github.panxiaochao.gateway.constants.OrderConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -11,25 +11,25 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 /**
- * {@code RequestWrapperFilter}
- * <p> description: 重新包装Body数据，解决是让其输入流可重复读，为后续的GlobalFilter重写post|put请求的body做准备
+ * {@code AuthFilter}
+ * <p> description:
  *
  * @author Lypxc
  * @since 2023-02-06
  */
 @Component
-public class RequestWrapperFilter implements GlobalFilter, Ordered {
+public class AuthFilter implements GlobalFilter, Ordered {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RequestWrapperFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthFilter.class);
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        LOGGER.info(">>> RequestWrapperFilter");
+        LOGGER.info(">>> AuthFilter");
         return chain.filter(exchange);
     }
 
     @Override
     public int getOrder() {
-        return OrderConstants.ORDER_REQUEST_WRAPPER;
+        return OrderConstant.ORDER_AUTH;
     }
 }

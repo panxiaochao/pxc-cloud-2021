@@ -1,6 +1,6 @@
-package io.github.panxiaochao.gateway.filter;
+package io.github.panxiaochao.gateway.globalfilter;
 
-import io.github.panxiaochao.gateway.constant.OrderConstants;
+import io.github.panxiaochao.gateway.constants.OrderConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -18,18 +18,18 @@ import reactor.core.publisher.Mono;
  * @since 2023-02-06
  */
 @Component
-public class AuthFilter implements GlobalFilter, Ordered {
+public class XssFilter implements GlobalFilter, Ordered {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuthFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(XssFilter.class);
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        LOGGER.info(">>> AuthFilter");
+        LOGGER.info(">>> XssFilter");
         return chain.filter(exchange);
     }
 
     @Override
     public int getOrder() {
-        return OrderConstants.ORDER_AUTH;
+        return OrderConstant.ORDER_XSS;
     }
 }

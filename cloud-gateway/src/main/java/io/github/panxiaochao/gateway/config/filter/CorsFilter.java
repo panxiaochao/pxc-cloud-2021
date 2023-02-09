@@ -31,10 +31,16 @@ public class CorsFilter implements WebFilter {
      * 当前跨域请求最大有效时长，同一个域名不会再进行检查，默认3600
      */
     private static final String MAX_AGE = "1800L";
+
+    /**
+     * ALL
+     */
+    private static final String ALL = "*";
+
     /**
      * 允许请求的方法
      */
-    private static final List<String> ALLOWED_METHODS =
+    private static final List<String> ALLOW_METHODS =
             Arrays.asList("OPTIONS", "HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
     private static final String ALLOW_HEADERS = "Authorization, Origin, X-Requested-With, Content-Type, Accept";
 
@@ -42,15 +48,15 @@ public class CorsFilter implements WebFilter {
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         LOGGER.info(">>> CorsFilter");
         ServerHttpRequest request = exchange.getRequest();
-        ServerHttpResponse response = exchange.getResponse();
         if (CorsUtils.isCorsRequest(request)) {
+            ServerHttpResponse response = exchange.getResponse();
             HttpHeaders headers = response.getHeaders();
-            headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-            headers.add("Access-Control-Allow-Origin-Patterns", "*");
+            headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, ALL);
+            // headers.add("Access-Control-Allow-Origin-Patterns", "*");
             headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, ALLOW_HEADERS);
-            headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, String.join(",", ALLOWED_METHODS));
-            headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
-            headers.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "*");
+            headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, String.join(",", ALLOW_METHODS));
+            headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, Boolean.toString(true));
+            headers.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, ALL);
             headers.add(HttpHeaders.ACCESS_CONTROL_MAX_AGE, MAX_AGE);
             if (request.getMethod() == HttpMethod.OPTIONS) {
                 response.setStatusCode(HttpStatus.OK);

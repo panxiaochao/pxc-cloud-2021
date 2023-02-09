@@ -3,13 +3,18 @@ package io.github.panxiaochao.gateway.utils;
 import io.github.panxiaochao.common.response.R;
 import io.github.panxiaochao.common.utils.JacksonUtil;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * {@code ServletWebUtil}
@@ -72,6 +77,23 @@ public class WebFluxUtil {
         response.getHeaders().add(HttpHeaders.CONTENT_TYPE, contentType);
         String result = JacksonUtil.toString(R.fail(code, value.toString(), null));
         DataBuffer dataBuffer = response.bufferFactory().wrap(result.getBytes(StandardCharsets.UTF_8));
-        return response.writeWith(Mono.just(dataBuffer));
+        return response.writeWith(Flux.just(dataBuffer));
+    }
+
+    /**
+     * 获取Body数据流转化为字符串
+     *
+     * @param serverHttpRequest ServerHttpRequest
+     * @return 字符串数据
+     */
+    public static String getRequestBody(ServerHttpRequest serverHttpRequest) {
+        Flux<DataBuffer> body = serverHttpRequest.getBody();
+        AtomicReference<String> bodyReference = new AtomicReference<>();
+        body.subscribe(buffer -> {
+            CharBuffer charBuffer = StandardCharsets.UTF_8.decode(buffer.asByteBuffer());
+            DataBufferUtils.release(buffer);
+            bodyReference.set(charBuffer.toString());
+        });
+        return bodyReference.get();
     }
 }
