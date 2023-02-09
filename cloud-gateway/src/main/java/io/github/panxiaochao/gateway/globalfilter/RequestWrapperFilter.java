@@ -57,7 +57,6 @@ public class RequestWrapperFilter implements GlobalFilter, Ordered {
                                         return Mono.just(buffer);
                                     });
                                 }
-
                                 @Override
                                 public HttpHeaders getHeaders() {
                                     return headers;
