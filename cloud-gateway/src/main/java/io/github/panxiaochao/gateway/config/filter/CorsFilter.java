@@ -48,8 +48,13 @@ public class CorsFilter implements WebFilter {
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         LOGGER.info(">>> CorsFilter");
         ServerHttpRequest request = exchange.getRequest();
+        ServerHttpResponse response = exchange.getResponse();
+        // 请求路径: /favicon.ico 404 NOT_FOUND
+        if ("/favicon.ico".equals(request.getURI().getPath())) {
+            response.setStatusCode(HttpStatus.OK);
+            return Mono.empty();
+        }
         if (CorsUtils.isCorsRequest(request)) {
-            ServerHttpResponse response = exchange.getResponse();
             HttpHeaders headers = response.getHeaders();
             headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, ALL);
             // headers.add("Access-Control-Allow-Origin-Patterns", "*");

@@ -25,6 +25,16 @@
 
         <dependency>
             <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>springdoc-openapi-webmvc-core</artifactId>
+                    <groupId>org.springdoc</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-webflux-ui</artifactId>
         </dependency>
 

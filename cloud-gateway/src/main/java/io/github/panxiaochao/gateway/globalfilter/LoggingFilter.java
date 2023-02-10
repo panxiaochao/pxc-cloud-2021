@@ -45,7 +45,7 @@ public class LoggingFilter implements GlobalFilter, Ordered {
                 String ip = LocalhostUtil.getHostIp();
                 HttpStatus httpStatus = exchange.getResponse().getStatusCode();
                 int code = httpStatus != null ? httpStatus.value() : 500;
-                LOGGER.info("Ip：{}, Path：{}, HttpMethod: {}, Query: {}, StatusCode：{}, Cost：{}ms",
+                LOGGER.info("Ip：{}, Path：{}, HttpMethod: {}, Query: {}, StatusCode：{}, Cost：{} ßms",
                         ip, basePath, httpMethod.name(), queryParams, code, executeTime);
             }
         }));
