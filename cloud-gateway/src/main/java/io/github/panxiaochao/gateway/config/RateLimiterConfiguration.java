@@ -3,6 +3,7 @@ package io.github.panxiaochao.gateway.config;
 import io.github.panxiaochao.gateway.constants.GatewayGlobalConstant;
 import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import reactor.core.publisher.Mono;
 
@@ -13,6 +14,7 @@ import reactor.core.publisher.Mono;
  * @author Lypxc
  * @since 2023-02-09
  */
+@Configuration
 public class RateLimiterConfiguration {
 
     /**

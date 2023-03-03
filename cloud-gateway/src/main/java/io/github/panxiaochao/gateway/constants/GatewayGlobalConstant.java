@@ -15,6 +15,16 @@ public interface GatewayGlobalConstant {
     String REQUEST_NO_HEADER_NAME = "REQUEST-NO";
 
     /**
+     * APPLICATION_NAME
+     */
+    String APPLICATION_NAME = "APPLICATION-NAME";
+
+    /**
+     * HOST-IP
+     */
+    String HOST_IP = "HOST-IP";
+
+    /**
      * TOKEN HEADER
      */
     String ACCESS_TOKEN_HEADER_NAME = "Authorization";

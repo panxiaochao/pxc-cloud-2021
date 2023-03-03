@@ -1,5 +1,7 @@
 package io.github.panxiaochao.gateway.globalfilter;
 
+import io.github.panxiaochao.common.utils.LocalhostUtil;
+import io.github.panxiaochao.common.utils.SpringContextUtil;
 import io.github.panxiaochao.gateway.constants.GatewayGlobalConstant;
 import io.github.panxiaochao.gateway.constants.OrderConstant;
 import org.slf4j.Logger;
@@ -31,9 +33,11 @@ public class RequestFilter implements GlobalFilter, Ordered {
         LOGGER.info(">>> RequestFilter");
         // 生成唯一请求号uuid
         String requestNo = UUID.randomUUID().toString().replaceAll("-", "");
-        // 增加请求头中的请求号
+        // 增加请求头中的请求号、Application Name、IP，用于简易白名单服务拦截
         ServerHttpRequest request = exchange.getRequest().mutate()
                 .header(GatewayGlobalConstant.REQUEST_NO_HEADER_NAME, requestNo)
+                .header(GatewayGlobalConstant.APPLICATION_NAME, SpringContextUtil.getApplicationName())
+                .header(GatewayGlobalConstant.HOST_IP, LocalhostUtil.getHostIp())
                 .build();
         return chain.filter(exchange.mutate().request(request).build());
     }
