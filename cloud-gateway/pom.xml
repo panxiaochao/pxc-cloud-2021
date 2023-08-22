@@ -10,7 +10,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>cloud-gateway</artifactId>
-    <packaging>jar</packaging>
     <description>Spring Cloud 2021 and Spring Cloud Alibaba for build Gateway Module</description>
 
     <properties>
@@ -74,16 +73,17 @@
             <scope>runtime</scope>
             <classifier>osx-aarch_64</classifier>
         </dependency>
-        <!-- 日志追踪链路 -->
+        <!-- pxc framework 工具包 -->
         <dependency>
             <groupId>io.github.panxiaochao</groupId>
-            <artifactId>pxc-framework-trace-log</artifactId>
+            <artifactId>pxc-framework-util</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
 
         <!-- 以下可选依赖 -->
         <!--        <dependency>-->

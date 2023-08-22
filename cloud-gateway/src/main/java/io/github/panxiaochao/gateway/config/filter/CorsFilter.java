@@ -17,57 +17,60 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * {@code CorsFilter}
- * <p> description: 跨域拦截器
+ * <p>
+ * 跨域拦截器.
+ * </p>
  *
  * @author Lypxc
  * @since 2023-02-06
  */
 public class CorsFilter implements WebFilter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CorsFilter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CorsFilter.class);
 
-    /**
-     * 当前跨域请求最大有效时长，同一个域名不会再进行检查，默认3600
-     */
-    private static final String MAX_AGE = "1800L";
+	/**
+	 * 当前跨域请求最大有效时长，同一个域名不会再进行检查，默认3600
+	 */
+	private static final String MAX_AGE = "1800L";
 
-    /**
-     * ALL
-     */
-    private static final String ALL = "*";
+	/**
+	 * ALL
+	 */
+	private static final String ALL = "*";
 
-    /**
-     * 允许请求的方法
-     */
-    private static final List<String> ALLOW_METHODS =
-            Arrays.asList("OPTIONS", "HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
-    private static final String ALLOW_HEADERS = "Authorization, Origin, X-Requested-With, Content-Type, Accept";
+	/**
+	 * 允许请求的方法
+	 */
+	private static final List<String> ALLOW_METHODS = Arrays.asList("OPTIONS", "HEAD", "GET", "PUT", "POST", "DELETE",
+			"PATCH");
 
-    @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        LOGGER.info(">>> CorsFilter");
-        ServerHttpRequest request = exchange.getRequest();
-        ServerHttpResponse response = exchange.getResponse();
-        // 请求路径: /favicon.ico 404 NOT_FOUND
-        if ("/favicon.ico".equals(request.getURI().getPath())) {
-            response.setStatusCode(HttpStatus.OK);
-            return Mono.empty();
-        }
-        if (CorsUtils.isCorsRequest(request)) {
-            HttpHeaders headers = response.getHeaders();
-            headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, ALL);
-            // headers.add("Access-Control-Allow-Origin-Patterns", "*");
-            headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, ALLOW_HEADERS);
-            headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, String.join(",", ALLOW_METHODS));
-            headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, Boolean.toString(true));
-            headers.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, ALL);
-            headers.add(HttpHeaders.ACCESS_CONTROL_MAX_AGE, MAX_AGE);
-            if (request.getMethod() == HttpMethod.OPTIONS) {
-                response.setStatusCode(HttpStatus.OK);
-                return Mono.empty();
-            }
-        }
-        return chain.filter(exchange);
-    }
+	private static final String ALLOW_HEADERS = "Authorization, Origin, X-Requested-With, Content-Type, Accept";
+
+	@Override
+	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+		LOGGER.info(">>> CorsFilter");
+		ServerHttpRequest request = exchange.getRequest();
+		ServerHttpResponse response = exchange.getResponse();
+		// 请求路径: /favicon.ico 404 NOT_FOUND
+		if ("/favicon.ico".equals(request.getURI().getPath())) {
+			response.setStatusCode(HttpStatus.OK);
+			return Mono.empty();
+		}
+		if (CorsUtils.isCorsRequest(request)) {
+			HttpHeaders headers = response.getHeaders();
+			headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, ALL);
+			// headers.add("Access-Control-Allow-Origin-Patterns", "*");
+			headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, ALLOW_HEADERS);
+			headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, String.join(",", ALLOW_METHODS));
+			headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, Boolean.toString(true));
+			headers.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, ALL);
+			headers.add(HttpHeaders.ACCESS_CONTROL_MAX_AGE, MAX_AGE);
+			if (request.getMethod() == HttpMethod.OPTIONS) {
+				response.setStatusCode(HttpStatus.OK);
+				return Mono.empty();
+			}
+		}
+		return chain.filter(exchange);
+	}
+
 }

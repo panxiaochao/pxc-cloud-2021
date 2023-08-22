@@ -1,0 +1,13 @@
+spring:
+  ## cloud nacos discovery 配置
+  cloud:
+    nacos:
+      discovery:
+        group: DEFAULT_GROUP
+        server-addr: 127.0.0.1:9948
+        namespace: pxc-dev
+
+# Spring Doc
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

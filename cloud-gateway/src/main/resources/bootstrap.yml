@@ -29,10 +29,6 @@ spring:
           enabled: true
           lower-case-service-id: true
     loadbalancer:
-      ribbon:
-        enabled: false
-      retry:
-        enabled: true
       cache:
         enabled: true
         caffeine:

@@ -26,95 +26,98 @@
 // import java.util.stream.Collectors;
 //
 // /**
-//  * {@code NacosListener}
-//  * <p> description: Nacos动态监听
-//  *
-//  * @author Lypxc
-//  * @since 2023-03-01
-//  */
+// * {@code NacosListener}
+// * <p> description: Nacos动态监听
+// *
+// * @author Lypxc
+// * @since 2023-03-01
+// */
 // @Configuration
 // public class NacosListener {
 //
-//     @Resource
-//     private NacosConfigManager nacosConfigManager;
+// @Resource
+// private NacosConfigManager nacosConfigManager;
 //
-//     @Resource
-//     private RouteDefinitionWriter routeDefinitionWriter;
+// @Resource
+// private RouteDefinitionWriter routeDefinitionWriter;
 //
-//     @Resource
-//     private InMemoryRouteDefinitionRepository routeDefinitionLocator;
+// @Resource
+// private InMemoryRouteDefinitionRepository routeDefinitionLocator;
 //
-//     @Resource
-//     private ApplicationEventPublisher applicationEventPublisher;
+// @Resource
+// private ApplicationEventPublisher applicationEventPublisher;
 //
-//     private static final Logger log = LoggerFactory.getLogger(NacosListener.class);
+// private static final Logger log = LoggerFactory.getLogger(NacosListener.class);
 //
-//     private static final String DATA_ID = "pxc-dev";
+// private static final String DATA_ID = "pxc-dev";
 //
-//     private static final String GROUP_ID = "pxc-dev";
+// private static final String GROUP_ID = "pxc-dev";
 //
 //
-//     @PostConstruct
-//     public void init() throws NacosException {
-//         nacosConfigListener();
-//     }
+// @PostConstruct
+// public void init() throws NacosException {
+// nacosConfigListener();
+// }
 //
-//     public void nacosConfigListener() throws NacosException {
-//         log.info("Spring Gateway 开始读取 Nacos 路由配置");
+// public void nacosConfigListener() throws NacosException {
+// log.info("Spring Gateway 开始读取 Nacos 路由配置");
 //
-//         ConfigService configService = nacosConfigManager.getConfigService();
+// ConfigService configService = nacosConfigManager.getConfigService();
 //
-//         if(configService == null){
-//             throw new RuntimeException("Spring Gateway Nacos 动态路由启动失败");
-//         }
+// if(configService == null){
+// throw new RuntimeException("Spring Gateway Nacos 动态路由启动失败");
+// }
 //
-//         String configInfo = configService.getConfig(DATA_ID, GROUP_ID, 100000);
+// String configInfo = configService.getConfig(DATA_ID, GROUP_ID, 100000);
 //
-//         List<RouteDefinition> definitionList = JacksonUtils.toObj(configInfo, new TypeReference<List<RouteDefinition>>() {});
+// List<RouteDefinition> definitionList = JacksonUtils.toObj(configInfo, new
+// TypeReference<List<RouteDefinition>>() {});
 //
-//         for(RouteDefinition definition : definitionList){
-//             log.info("Spring Gateway Nacos 路由配置 : {}", definition.toString());
-//             routeDefinitionWriter.save(Mono.just(definition)).block();
-//         }
+// for(RouteDefinition definition : definitionList){
+// log.info("Spring Gateway Nacos 路由配置 : {}", definition.toString());
+// routeDefinitionWriter.save(Mono.just(definition)).block();
+// }
 //
-//         configService.addListener(DATA_ID, GROUP_ID, new Listener() {
-//             @Override
-//             public Executor getExecutor() {
-//                 return null;
-//             }
+// configService.addListener(DATA_ID, GROUP_ID, new Listener() {
+// @Override
+// public Executor getExecutor() {
+// return null;
+// }
 //
-//             @Override
-//             public void receiveConfigInfo(String configInfo) {
-//                 if (StringUtils.isNotBlank(configInfo)){
-//                     // 序列化新路由
-//                     List<RouteDefinition> updateDefinitionList = JacksonUtils.toObj(configInfo, new TypeReference<List<RouteDefinition>>() {});
+// @Override
+// public void receiveConfigInfo(String configInfo) {
+// if (StringUtils.isNotBlank(configInfo)){
+// // 序列化新路由
+// List<RouteDefinition> updateDefinitionList = JacksonUtils.toObj(configInfo, new
+// TypeReference<List<RouteDefinition>>() {});
 //
-//                     // 拿到新路由的所有id
-//                     List<String> ids = updateDefinitionList.stream().map(RouteDefinition::getId).collect(Collectors.toList());
+// // 拿到新路由的所有id
+// List<String> ids =
+// updateDefinitionList.stream().map(RouteDefinition::getId).collect(Collectors.toList());
 //
-//                     // 拿到旧路由数据
-//                     Flux<RouteDefinition> routeDefinitions = routeDefinitionLocator.getRouteDefinitions();
+// // 拿到旧路由数据
+// Flux<RouteDefinition> routeDefinitions = routeDefinitionLocator.getRouteDefinitions();
 //
-//                     routeDefinitions.doOnNext(r -> {
-//                         String id = r.getId();
-//                         if (!ids.contains(id)) {
-//                             routeDefinitionWriter.delete(Mono.just(id)).subscribeOn(Schedulers.parallel()).subscribe();
-//                             log.info("Spring Gateway 删除 Nacos 路由配置 : {}", id);
-//                         }
-//                     }).doOnComplete(() -> {
+// routeDefinitions.doOnNext(r -> {
+// String id = r.getId();
+// if (!ids.contains(id)) {
+// routeDefinitionWriter.delete(Mono.just(id)).subscribeOn(Schedulers.parallel()).subscribe();
+// log.info("Spring Gateway 删除 Nacos 路由配置 : {}", id);
+// }
+// }).doOnComplete(() -> {
 //
-//                     }).doAfterTerminate(() -> {
-//                         for(RouteDefinition definition : updateDefinitionList){
-//                             log.info("Spring Gateway merge Nacos 路由配置 : {}", definition.toString());
-//                             routeDefinitionWriter.save(Mono.just(definition)).subscribeOn(Schedulers.parallel()).subscribe();
-//                         }
-//                     }).subscribe();
+// }).doAfterTerminate(() -> {
+// for(RouteDefinition definition : updateDefinitionList){
+// log.info("Spring Gateway merge Nacos 路由配置 : {}", definition.toString());
+// routeDefinitionWriter.save(Mono.just(definition)).subscribeOn(Schedulers.parallel()).subscribe();
+// }
+// }).subscribe();
 //
-//                     applicationEventPublisher.publishEvent(new RefreshRoutesEvent(new Object()));
-//                 } else {
-//                     log.info("当前网关无动态路由相关配置");
-//                 }
-//             }
-//         });
-//     }
+// applicationEventPublisher.publishEvent(new RefreshRoutesEvent(new Object()));
+// } else {
+// log.info("当前网关无动态路由相关配置");
+// }
+// }
+// });
+// }
 // }

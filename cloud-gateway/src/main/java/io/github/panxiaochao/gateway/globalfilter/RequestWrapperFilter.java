@@ -19,8 +19,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * {@code RequestWrapperFilter}
- * <p> description: 重新包装Body数据，解决让输入流可重复读
+ * <p>
+ * 重新包装Body数据，解决让输入流可重复读.
+ * </p>
  *
  * @author Lypxc
  * @since 2023-02-06
@@ -28,49 +29,50 @@ import reactor.core.publisher.Mono;
 @Component
 public class RequestWrapperFilter implements GlobalFilter, Ordered {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RequestWrapperFilter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RequestWrapperFilter.class);
 
-    @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        LOGGER.info(">>> RequestWrapperFilter");
-        HttpMethod method = exchange.getRequest().getMethod();
-        HttpHeaders headers = exchange.getRequest().getHeaders();
-        String contentType = headers.getFirst(HttpHeaders.CONTENT_TYPE);
-        if (method == HttpMethod.POST || method == HttpMethod.PUT) {
-            // 针对Form表单提交和Json提交进行拦截
-            if (MediaType.APPLICATION_FORM_URLENCODED_VALUE.equalsIgnoreCase(contentType)
-                    || MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(contentType)
-                    || MediaType.APPLICATION_JSON_UTF8_VALUE.equals(contentType)) {
-                return DataBufferUtils.join(exchange.getRequest().getBody())
-                        .flatMap(dataBuffer -> {
-                            DataBufferUtils.retain(dataBuffer);
-                            byte[] bytes = new byte[dataBuffer.readableByteCount()];
-                            dataBuffer.read(bytes);
-                            // 释放堆外内存
-                            DataBufferUtils.release(dataBuffer);
-                            ServerHttpRequest mutatedRequest = new ServerHttpRequestDecorator(exchange.getRequest()) {
-                                @Override
-                                public Flux<DataBuffer> getBody() {
-                                    return Flux.defer(() -> {
-                                        DataBuffer buffer = exchange.getResponse().bufferFactory().wrap(bytes);
-                                        DataBufferUtils.retain(buffer);
-                                        return Mono.just(buffer);
-                                    });
-                                }
-                                @Override
-                                public HttpHeaders getHeaders() {
-                                    return headers;
-                                }
-                            };
-                            return chain.filter(exchange.mutate().request(mutatedRequest).build());
-                        });
-            }
-        }
-        return chain.filter(exchange);
-    }
+	@Override
+	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+		LOGGER.info(">>> RequestWrapperFilter");
+		HttpMethod method = exchange.getRequest().getMethod();
+		HttpHeaders headers = exchange.getRequest().getHeaders();
+		String contentType = headers.getFirst(HttpHeaders.CONTENT_TYPE);
+		if (method == HttpMethod.POST || method == HttpMethod.PUT) {
+			// 针对Form表单提交和Json提交进行拦截
+			if (MediaType.APPLICATION_FORM_URLENCODED_VALUE.equalsIgnoreCase(contentType)
+					|| MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(contentType)
+					|| MediaType.APPLICATION_JSON_UTF8_VALUE.equals(contentType)) {
+				return DataBufferUtils.join(exchange.getRequest().getBody()).flatMap(dataBuffer -> {
+					DataBufferUtils.retain(dataBuffer);
+					byte[] bytes = new byte[dataBuffer.readableByteCount()];
+					dataBuffer.read(bytes);
+					// 释放堆外内存
+					DataBufferUtils.release(dataBuffer);
+					ServerHttpRequest mutatedRequest = new ServerHttpRequestDecorator(exchange.getRequest()) {
+						@Override
+						public Flux<DataBuffer> getBody() {
+							return Flux.defer(() -> {
+								DataBuffer buffer = exchange.getResponse().bufferFactory().wrap(bytes);
+								DataBufferUtils.retain(buffer);
+								return Mono.just(buffer);
+							});
+						}
 
-    @Override
-    public int getOrder() {
-        return OrderConstant.ORDER_REQUEST_WRAPPER;
-    }
+						@Override
+						public HttpHeaders getHeaders() {
+							return headers;
+						}
+					};
+					return chain.filter(exchange.mutate().request(mutatedRequest).build());
+				});
+			}
+		}
+		return chain.filter(exchange);
+	}
+
+	@Override
+	public int getOrder() {
+		return OrderConstant.ORDER_REQUEST_WRAPPER;
+	}
+
 }

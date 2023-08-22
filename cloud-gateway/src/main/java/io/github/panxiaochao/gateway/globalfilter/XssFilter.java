@@ -11,8 +11,9 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 /**
- * {@code AuthFilter}
- * <p> description:
+ * <p>
+ * Xss拦截.
+ * </p>
  *
  * @author Lypxc
  * @since 2023-02-06
@@ -20,16 +21,17 @@ import reactor.core.publisher.Mono;
 @Component
 public class XssFilter implements GlobalFilter, Ordered {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(XssFilter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(XssFilter.class);
 
-    @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        LOGGER.info(">>> XssFilter");
-        return chain.filter(exchange);
-    }
+	@Override
+	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+		LOGGER.info(">>> XssFilter");
+		return chain.filter(exchange);
+	}
 
-    @Override
-    public int getOrder() {
-        return OrderConstant.ORDER_XSS;
-    }
+	@Override
+	public int getOrder() {
+		return OrderConstant.ORDER_XSS;
+	}
+
 }
