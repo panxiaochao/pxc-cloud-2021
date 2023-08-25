@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
 
@@ -22,7 +21,6 @@ import java.net.InetAddress;
  * @since 2023-02-06
  */
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
-@ComponentScan(value = { "io.github.panxiaochao" })
 @EnableDiscoveryClient
 public class GatewayApplication {
 

@@ -5,15 +5,20 @@ import io.github.panxiaochao.core.utils.JacksonUtil;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.PathMatcher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -26,6 +31,58 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class WebFluxUtil {
 
+	private static final PathMatcher PATH_MATCHER = new AntPathMatcher();
+
+	/**
+	 * 判断路径是否与路径模式匹配
+	 * @param patterns 路径模式数组
+	 * @param path url
+	 * @return 是否匹配
+	 */
+	public static boolean isPathMatch(String[] patterns, String path) {
+		return isPathMatch(Arrays.asList(patterns), path);
+	}
+
+	/**
+	 * 判断路径是否与路径模式匹配
+	 * @param patterns 路径模式字符串List
+	 * @param path url
+	 * @return 是否匹配
+	 */
+	public static boolean isPathMatch(List<String> patterns, String path) {
+		for (String pattern : patterns) {
+			if (PATH_MATCHER.match(pattern, path)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 是否是GET请求
+	 */
+	public static boolean isGetRequest(HttpMethod method) {
+		return method == HttpMethod.GET;
+	}
+
+	/**
+	 * 是否是POST请求
+	 */
+	public static Boolean isPostRequest(HttpMethod method, String contentType) {
+		return (method == HttpMethod.POST || method == HttpMethod.PUT)
+				&& (MediaType.APPLICATION_FORM_URLENCODED_VALUE.equalsIgnoreCase(contentType)
+						|| MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(contentType));
+	}
+
+	/**
+	 * 是否是Json请求
+	 * @param contentType 请求头
+	 */
+	public static boolean isJsonRequest(String contentType) {
+		return MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(contentType)
+				|| MediaType.APPLICATION_JSON_UTF8_VALUE.equalsIgnoreCase(contentType);
+	}
+
 	/**
 	 * 设置webflux模型响应
 	 * @param response ServerHttpResponse
@@ -33,7 +90,7 @@ public class WebFluxUtil {
 	 * @return Mono<Void>
 	 */
 	public static Mono<Void> webFluxResponseWriter(ServerHttpResponse response, Object value) {
-		return webFluxResponseWriter(response, HttpStatus.OK, value, HttpStatus.INTERNAL_SERVER_ERROR.value());
+		return webFluxResponseWriter(response, HttpStatus.OK, value, HttpStatus.OK.value());
 	}
 
 	/**

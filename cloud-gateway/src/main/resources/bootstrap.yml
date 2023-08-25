@@ -7,7 +7,7 @@ server:
 spring:
   ## 配置文件
   profiles:
-    active: dev
+    active: local
   ## 应用名称
   application:
     name: cloud-gateway
@@ -20,7 +20,7 @@ spring:
     nacos:
       config:
         server-addr: 127.0.0.1:9948
-        file-extension: yml
+        file-extension: yaml
         group: DEFAULT_GROUP
     gateway:
       discovery:

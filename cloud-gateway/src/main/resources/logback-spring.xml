@@ -8,9 +8,9 @@
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
     <property name="filePath" value="./logs/cloud-gateway"/>
     <property name="consolePattern"
-              value="%d{YYYY-MM-dd HH:mm:ss.SSS} %cyan(%-5level) %magenta(${PID:- }) [%thread] %X{tl} %cyan(%logger{50}) - %msg%n"/>
+              value="%d{YYYY-MM-dd HH:mm:ss.SSS} %cyan(%-5level) %magenta(${PID:- }) [%thread] %X{tl} %cyan(%logger{80}) - %msg%n"/>
     <property name="patternLayout"
-              value="%d{YYYY-MM-dd HH:mm:ss.SSS} %-5level [%thread] %X{tl} %logger{50} %file:%line - %msg%n"/>
+              value="%d{YYYY-MM-dd HH:mm:ss.SSS} %-5level [%thread] %X{tl} %logger{80} %file:%line - %msg%n"/>
     <!-- 日志最大的历史 30天 -->
     <property name="maxHistory" value="30"/>
 
@@ -100,7 +100,7 @@
     </appender>
 
     <!-- Spring日志级别控制  -->
-    <logger name="org.springframework" level="INFO" additivity="false"/>
+    <logger name="org.springframework" level="INFO"/>
 
     <!-- 全局控制日志 -->
     <root level="INFO">

@@ -27,18 +27,13 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- pxc-dynamic-datasource-spring-boot-starter 依赖管理 -->
+            <!-- Spring Boot 依赖管理 -->
             <dependency>
-                <groupId>io.github.panxiaochao</groupId>
-                <artifactId>pxc-dynamic-datasource-spring-boot-starter</artifactId>
-                <version>${pxc-dynamic-datasource-spring-boot.version}</version>
-            </dependency>
-
-            <!-- pxc-jwt-commons-spring-boot-starter 依赖管理 -->
-            <dependency>
-                <groupId>io.github.panxiaochao</groupId>
-                <artifactId>pxc-jwt-commons-spring-boot-starter</artifactId>
-                <version>${pxc-jwt-commons-spring-boot.version}</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <!-- Pxc-framework 依赖管理 -->

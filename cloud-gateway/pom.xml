@@ -76,7 +76,7 @@
         <!-- pxc framework 工具包 -->
         <dependency>
             <groupId>io.github.panxiaochao</groupId>
-            <artifactId>pxc-framework-util</artifactId>
+            <artifactId>pxc-framework-trace-log</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

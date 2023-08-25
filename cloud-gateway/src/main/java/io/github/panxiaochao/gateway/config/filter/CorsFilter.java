@@ -48,7 +48,7 @@ public class CorsFilter implements WebFilter {
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-		LOGGER.info(">>> CorsFilter");
+		// LOGGER.info(">>> CorsFilter");
 		ServerHttpRequest request = exchange.getRequest();
 		ServerHttpResponse response = exchange.getResponse();
 		// 请求路径: /favicon.ico 404 NOT_FOUND

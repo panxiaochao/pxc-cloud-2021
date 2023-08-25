@@ -1,9 +1,8 @@
 package io.github.panxiaochao.gateway.globalfilter;
 
-import io.github.panxiaochao.core.utils.IpUtil;
-import io.github.panxiaochao.core.utils.SpringContextUtil;
+import io.github.panxiaochao.core.utils.UuidUtil;
+import io.github.panxiaochao.gateway.constants.FilterOrderConstant;
 import io.github.panxiaochao.gateway.constants.GatewayGlobalConstant;
-import io.github.panxiaochao.gateway.constants.OrderConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.util.UUID;
+import java.util.Objects;
 
 /**
  * <p>
@@ -31,22 +30,20 @@ public class RequestFilter implements GlobalFilter, Ordered {
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-		LOGGER.info(">>> RequestFilter");
-		// 生成唯一请求号uuid
-		String requestNo = UUID.randomUUID().toString().replaceAll("-", "");
-		// 增加请求头中的请求号、Application Name、IP，用于简易白名单服务拦截
-		ServerHttpRequest request = exchange.getRequest()
-			.mutate()
-			.header(GatewayGlobalConstant.REQUEST_NO_HEADER_NAME, requestNo)
-			.header(GatewayGlobalConstant.APPLICATION_NAME, SpringContextUtil.getApplicationName())
-			.header(GatewayGlobalConstant.HOST_IP, IpUtil.getHostIp())
+		// LOGGER.info(">>> RequestFilter");
+		ServerHttpRequest request = exchange.getRequest();
+		// 增加请求头中的请求号、IP，用于简易白名单服务拦截
+		ServerHttpRequest newRequest = request.mutate()
+			.header(GatewayGlobalConstant.X_REQUEST_NO, UuidUtil.getSimpleUUID())
+			.header(GatewayGlobalConstant.REQUEST_IP,
+					Objects.requireNonNull(request.getRemoteAddress()).getHostString())
 			.build();
-		return chain.filter(exchange.mutate().request(request).build());
+		return chain.filter(exchange.mutate().request(newRequest).build());
 	}
 
 	@Override
 	public int getOrder() {
-		return OrderConstant.ORDER_REQUEST;
+		return FilterOrderConstant.ORDER_REQUEST;
 	}
 
 }

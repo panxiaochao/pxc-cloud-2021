@@ -1,6 +1,6 @@
 package io.github.panxiaochao.gateway.globalfilter;
 
-import io.github.panxiaochao.gateway.constants.OrderConstant;
+import io.github.panxiaochao.gateway.constants.FilterOrderConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -33,7 +33,7 @@ public class RequestWrapperFilter implements GlobalFilter, Ordered {
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-		LOGGER.info(">>> RequestWrapperFilter");
+		// LOGGER.info(">>> RequestWrapperFilter");
 		HttpMethod method = exchange.getRequest().getMethod();
 		HttpHeaders headers = exchange.getRequest().getHeaders();
 		String contentType = headers.getFirst(HttpHeaders.CONTENT_TYPE);
@@ -72,7 +72,7 @@ public class RequestWrapperFilter implements GlobalFilter, Ordered {
 
 	@Override
 	public int getOrder() {
-		return OrderConstant.ORDER_REQUEST_WRAPPER;
+		return FilterOrderConstant.ORDER_REQUEST_WRAPPER;
 	}
 
 }

@@ -1,9 +1,9 @@
 package io.github.panxiaochao.gateway.config;
 
-import io.github.panxiaochao.core.utils.SpringContextUtil;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.AbstractSwaggerUiConfigProperties;
 import org.springdoc.core.SwaggerUiConfigProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +29,9 @@ public class SpringDocConfiguration {
 
 	private static final String DISCOVERY_CLIENT_ID_PRE = "ReactiveCompositeDiscoveryClient_";
 
+	@Value("${spring.application.name}")
+	private String selfServiceName;
+
 	private static final String V3_API_DOCS = "/%s/v3/api-docs";
 
 	private final SwaggerUiConfigProperties swaggerUiConfigProperties;
@@ -37,7 +40,6 @@ public class SpringDocConfiguration {
 
 	@PostConstruct
 	public void apis() {
-		final String selfServiceName = SpringContextUtil.getApplicationName();
 		final String selfServiceId = DISCOVERY_CLIENT_ID_PRE + selfServiceName;
 		List<RouteDefinition> definitions = locator.getRouteDefinitions().collectList().block();
 		if (!CollectionUtils.isEmpty(definitions)) {

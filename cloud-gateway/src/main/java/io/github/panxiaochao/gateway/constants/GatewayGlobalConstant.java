@@ -13,17 +13,17 @@ public interface GatewayGlobalConstant {
 	/**
 	 * 请求唯一编码 请求头HeaderName
 	 */
-	String REQUEST_NO_HEADER_NAME = "REQUEST-NO";
+	String X_REQUEST_NO = "X-REQUEST-NO";
 
 	/**
-	 * APPLICATION_NAME
-	 */
-	String APPLICATION_NAME = "APPLICATION-NAME";
-
-	/**
-	 * HOST-IP
+	 * 本机IP，用于内部白名单校验
 	 */
 	String HOST_IP = "HOST-IP";
+
+	/**
+	 * 请求IP，用于内部白名单校验
+	 */
+	String REQUEST_IP = "REQUEST-IP";
 
 	/**
 	 * TOKEN HEADER
