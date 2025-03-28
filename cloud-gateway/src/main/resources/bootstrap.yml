@@ -28,11 +28,13 @@ spring:
           #表明gateway开启服务注册和发现的功能，
           enabled: true
           lower-case-service-id: true
-    loadbalancer:
-      cache:
-        enabled: true
-        caffeine:
-          spec: initialCapacity=500,expireAfterWrite=5s
+      routes:
+        - id: cloud-client
+          uri: http://10.80.101.76:10001
+          predicates:
+            - Path=/client_a/**
+          filters:
+            - StripPrefix=1
 
 # 暴露端点
 management:
